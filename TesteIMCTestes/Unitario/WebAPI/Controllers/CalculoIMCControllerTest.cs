@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using FluentAssertions;
 using MediatR;
+using Microsoft.AspNetCore.Mvc;
 using Moq;
+using TesteIMCApplication.Commands.CalculoIMC;
 using TesteIMCWebAPI.Controllers;
 using Xunit;
 
@@ -22,46 +24,39 @@ namespace TesteIMCTestes.Unitario.WebAPI.Controllers
             _controller = new CalculoIMCController(_mediatorMock.Object);
         }
 
-        [Theory]
-        [InlineData("2", "60", 2, 60, 15, "Magreza")]
-        [InlineData("2", "80", 2, 80, 20, "Normal")]
-        [InlineData("2", "100", 2, 100, 25, "Sobrepeso")]
-        [InlineData("2", "120", 2, 120, 30, "Obesidade")]
-        [InlineData("2", "160", 2, 160, 40, "Obesidade grave")]
-        public async Task Get_AlturaPesoCorretos_Sucesso(string altura, string peso, 
-            decimal alturaEsperada, decimal pesoEsperado, decimal imcEsperado, string analiseEsperada)
+        [Fact]
+        public async Task GetAsync_ResultadoSucesso_Sucesso()
         {
-            var result = await _controller.Get(altura, peso);
+            var response = new CalculoIMCResponse
+            {
+                IsSuccess = true,
+                Analise = "Teste",
+                IMC = 1
+            };
 
-            result.Altura.Should().Be(alturaEsperada);
-            result.Peso.Should().Be(pesoEsperado);
-            result.IMC.Should().Be(imcEsperado);
-            result.Analise.Should().Be(analiseEsperada);
+            _mediatorMock.Setup(x => x.Send(It.IsAny<CalculoIMCRequest>(), CancellationToken.None))
+                .Returns(() => Task.FromResult(response));
+
+            var result = await _controller.GetAsync("2", "100", CancellationToken.None);
+
+            result.As<OkObjectResult>().Value.As<CalculoIMCViewModel>().Altura.Should().Be(2);
+            result.As<OkObjectResult>().Value.As<CalculoIMCViewModel>().Analise.Should().Be("Teste");
+            result.As<OkObjectResult>().Value.As<CalculoIMCViewModel>().IMC.Should().Be(1);
+            result.As<OkObjectResult>().Value.As<CalculoIMCViewModel>().Peso.Should().Be(100);
         }
 
         [Fact]
-        public async Task Get_AlturaNaoInformada_Erro()
+        public async Task GetAsync_ResultadoFalha_Erro()
         {
-            _controller.Invoking(async x => await x.Get(null, "100"))
-                .Should().Throw<ArgumentException>()
-                .WithMessage("Altura e/ou peso devem ser informados");
-        }
+            var response = new CalculoIMCResponse();
+            response.SetFail(new List<string> { "Falha 1"});
 
-        [Fact]
-        public async Task Get_PesoNaoInformada_Erro()
-        {
-            _controller.Invoking(async x => await x.Get("2", null))
-                .Should().Throw<ArgumentException>()
-                .WithMessage("Altura e/ou peso devem ser informados");
-        }
+            _mediatorMock.Setup(x => x.Send(It.IsAny<CalculoIMCRequest>(), CancellationToken.None))
+                .Returns(() => Task.FromResult(response));
 
-        [Fact]
-        public async Task Get_PesoInformadoErrado_Erro()
-        {
-            _controller.Invoking(async x => await x.Get("2", "dkdkd"))
-                .Should().Throw<System.Net.Http.HttpRequestException>()
-                .WithMessage("Input string was not in a correct format.");
-        }
+            var result = await _controller.GetAsync("2", "100", CancellationToken.None);
 
+            result.As<BadRequestObjectResult>().Value.As<string>().Should().Be("Erros:Falha 1");
+        }
     }
 }

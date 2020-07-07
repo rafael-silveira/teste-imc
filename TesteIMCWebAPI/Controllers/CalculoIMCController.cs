@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Net.Http;
+using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
 using Microsoft.AspNetCore.Http;
@@ -23,7 +24,7 @@ namespace TesteIMCWebAPI.Controllers
         }
 
         [HttpGet("imc")]
-        public async Task<CalculoIMCViewModel> Get(string altura, string peso)
+        public async Task<IActionResult> GetAsync(string altura, string peso, CancellationToken cancellationToken)
         {
             var request = new CalculoIMCRequest
             {
@@ -31,17 +32,20 @@ namespace TesteIMCWebAPI.Controllers
                 Peso = peso
             };
 
-            var response = await _mediator.Send(request);
+            var response = await _mediator.Send(request, cancellationToken);
 
-            var result = new CalculoIMCViewModel
+            if (!response.IsSuccess)
+            {
+                return BadRequest("Erros:" + string.Join(", ", response.Errors));
+            }
+
+            return Ok(new CalculoIMCViewModel
             {
                 Altura = Convert.ToDecimal(altura, CultureInfo.InvariantCulture),
                 Peso = Convert.ToDecimal(peso, CultureInfo.InvariantCulture),
                 IMC = response.IMC,
                 Analise = response.Analise
-            };
-
-            return result;
+            });
         }
     }
 
