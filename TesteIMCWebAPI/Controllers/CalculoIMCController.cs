@@ -4,8 +4,10 @@ using System.Globalization;
 using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
+using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using TesteIMCApplication.Commands.CalculoIMC;
 
 namespace TesteIMCWebAPI.Controllers
 {
@@ -13,53 +15,38 @@ namespace TesteIMCWebAPI.Controllers
     [ApiController]
     public class CalculoIMCController : ControllerBase
     {
-        // por enquanto, tudo calculado no proprio controller para posteriormente mudar tudo para o uso de mediatr
+        private IMediator _mediator;
+
+        public CalculoIMCController(IMediator mediator)
+        {
+            _mediator = mediator;
+        }
 
         [HttpGet("imc")]
-        public CalculoICMViewModel Get(string altura, string peso)
+        public async Task<CalculoIMCViewModel> Get(string altura, string peso)
         {
-            // controller validando altura e peso?
-            if (string.IsNullOrEmpty(altura) || string.IsNullOrEmpty(peso))
+            var request = new CalculoIMCRequest
             {
-                throw new ArgumentException("Altura e/ou peso devem ser informados");
-            }
+                Altura = altura,
+                Peso = peso
+            };
 
-            try
+            var response = await _mediator.Send(request);
+
+            var result = new CalculoIMCViewModel
             {
-                // eu sei o que eu informei para ser calculado... pq preciso receber de volta???
-                var result = new CalculoICMViewModel
-                {
-                    Altura = Convert.ToDecimal(altura, CultureInfo.InvariantCulture),
-                    Peso = Convert.ToDecimal(peso, CultureInfo.InvariantCulture)
-                };
+                Altura = Convert.ToDecimal(altura, CultureInfo.InvariantCulture),
+                Peso = Convert.ToDecimal(peso, CultureInfo.InvariantCulture),
+                IMC = response.IMC,
+                Analise = response.Analise
+            };
 
-                // controller calculando imc também?
-                result.IMC = result.Peso / (result.Altura * result.Altura);
-
-                // controller fazendo a analise do icm também?
-                if (result.IMC < 18.5m)
-                    result.Analise = "Magreza";
-                else if (result.IMC < 25)
-                    result.Analise = "Normal";
-                else if (result.IMC < 30)
-                    result.Analise = "Sobrepeso";
-                else if (result.IMC < 40)
-                    result.Analise = "Obesidade";
-                else
-                    result.Analise = "Obesidade grave";
-
-                return result;
-            }
-            catch (Exception ex)
-            {
-                // retornando uma exceção que nao tem nada relacionado com o problema
-                throw new HttpRequestException(ex.Message);
-            }
+            return result;
         }
     }
 
     // classe junta com outra no mesmo arquivo
-    public class CalculoICMViewModel
+    public class CalculoIMCViewModel
     {
         public decimal Altura { get; set; }
         public decimal Peso { get; set; }

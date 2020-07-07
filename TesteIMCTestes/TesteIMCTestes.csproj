@@ -8,6 +8,8 @@
 
   <ItemGroup>
     <PackageReference Include="FluentAssertions" Version="5.10.3" />
+    <PackageReference Include="FluentValidation" Version="9.0.0" />
+    <PackageReference Include="MediatR" Version="8.0.2" />
     <PackageReference Include="Microsoft.AspNetCore.TestHost" Version="3.1.5" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.5.0" />
     <PackageReference Include="Moq" Version="4.14.5" />
@@ -17,6 +19,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\TesteIMCApplication\TesteIMCApplication.csproj" />
     <ProjectReference Include="..\TesteIMCWebAPI\TesteIMCWebAPI.csproj" />
   </ItemGroup>
 

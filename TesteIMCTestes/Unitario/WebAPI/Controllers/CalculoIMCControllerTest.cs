@@ -1,7 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading.Tasks;
 using FluentAssertions;
+using MediatR;
+using Moq;
 using TesteIMCWebAPI.Controllers;
 using Xunit;
 
@@ -10,10 +13,13 @@ namespace TesteIMCTestes.Unitario.WebAPI.Controllers
     public class CalculoIMCControllerTest
     {
         private CalculoIMCController _controller;
+        private Mock<IMediator> _mediatorMock;
 
         public CalculoIMCControllerTest()
         {
-            _controller = new CalculoIMCController();
+            _mediatorMock = new Mock<IMediator>();
+
+            _controller = new CalculoIMCController(_mediatorMock.Object);
         }
 
         [Theory]
@@ -22,10 +28,10 @@ namespace TesteIMCTestes.Unitario.WebAPI.Controllers
         [InlineData("2", "100", 2, 100, 25, "Sobrepeso")]
         [InlineData("2", "120", 2, 120, 30, "Obesidade")]
         [InlineData("2", "160", 2, 160, 40, "Obesidade grave")]
-        public void Get_AlturaPesoCorretos_Sucesso(string altura, string peso, 
+        public async Task Get_AlturaPesoCorretos_Sucesso(string altura, string peso, 
             decimal alturaEsperada, decimal pesoEsperado, decimal imcEsperado, string analiseEsperada)
         {
-            var result = _controller.Get(altura, peso);
+            var result = await _controller.Get(altura, peso);
 
             result.Altura.Should().Be(alturaEsperada);
             result.Peso.Should().Be(pesoEsperado);
@@ -34,25 +40,25 @@ namespace TesteIMCTestes.Unitario.WebAPI.Controllers
         }
 
         [Fact]
-        public void Get_AlturaNaoInformada_Erro()
+        public async Task Get_AlturaNaoInformada_Erro()
         {
-            _controller.Invoking(x => x.Get(null, "100"))
+            _controller.Invoking(async x => await x.Get(null, "100"))
                 .Should().Throw<ArgumentException>()
                 .WithMessage("Altura e/ou peso devem ser informados");
         }
 
         [Fact]
-        public void Get_PesoNaoInformada_Erro()
+        public async Task Get_PesoNaoInformada_Erro()
         {
-            _controller.Invoking(x => x.Get("2", null))
+            _controller.Invoking(async x => await x.Get("2", null))
                 .Should().Throw<ArgumentException>()
                 .WithMessage("Altura e/ou peso devem ser informados");
         }
 
         [Fact]
-        public void Get_PesoInformadoErrado_Erro()
+        public async Task Get_PesoInformadoErrado_Erro()
         {
-            _controller.Invoking(x => x.Get("2", "dkdkd"))
+            _controller.Invoking(async x => await x.Get("2", "dkdkd"))
                 .Should().Throw<System.Net.Http.HttpRequestException>()
                 .WithMessage("Input string was not in a correct format.");
         }

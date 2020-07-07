@@ -19,11 +19,6 @@ namespace TesteIMCTestes.Integracao
             _fixture = fixture;
         }
 
-        // na teoria, com a modificação para mediatr, o unico teste que realmente não vai mudar é o de integração
-        // se eu fiz a chamada para /api/calculo/imc, ele deve retornar um json com { IMC(decimal); Analise(string) }
-        // e era isso... mudando com a criacao de dominio, mediatr, commands, etc... nada deve mudar o comportamento
-        // quero SEMPRE chamar o endereco /api/calculo/imc com os parametros altura e peso e receber o icm e analise
-        // como vai ser feito... nao interessa
         [Fact]
         public async Task GetAsync_AcessoAPICalculoIMCComDadosCorretos_Sucesso()
         {
