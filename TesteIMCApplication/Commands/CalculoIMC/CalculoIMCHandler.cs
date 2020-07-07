@@ -19,6 +19,8 @@ namespace TesteIMCApplication.Commands.CalculoIMC
             _validator = validator;
         }
 
+        // classe faz muitas coisas ainda
+        // ele controla a validacao e calcula o imc
         public async Task<CalculoIMCResponse> Handle(CalculoIMCRequest request, CancellationToken cancellationToken)
         {
             var validationResult = await _validator.ValidateAsync(request);
