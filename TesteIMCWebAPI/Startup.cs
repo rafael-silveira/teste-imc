@@ -13,6 +13,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using TesteIMCApplication.Commands.CalculoIMC;
+using TesteIMCDominio.Servicos.CalculoIMC;
 
 namespace TesteIMCWebAPI
 {
@@ -28,6 +29,7 @@ namespace TesteIMCWebAPI
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddScoped<IServicoCalculoIMC, ServicoCalculoIMC>();
             services.AddMediatR(Assembly.GetAssembly(typeof(CalculoIMCValidation)));
             services.AddValidatorsFromAssemblyContaining<CalculoIMCValidation>();
 

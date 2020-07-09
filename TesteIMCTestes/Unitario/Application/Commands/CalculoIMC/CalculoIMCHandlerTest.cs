@@ -8,6 +8,7 @@ using FluentValidation;
 using FluentValidation.Results;
 using Moq;
 using TesteIMCApplication.Commands.CalculoIMC;
+using TesteIMCDominio.Servicos.CalculoIMC;
 using Xunit;
 
 namespace TesteIMCTestes.Unitario.Application.Commands.CalculoIMC
@@ -16,11 +17,13 @@ namespace TesteIMCTestes.Unitario.Application.Commands.CalculoIMC
     {
         private CalculoIMCHandler _handler;
         private Mock<IValidator<CalculoIMCRequest>> _validatorMock;
+        private Mock<IServicoCalculoIMC> _servicoCalculoImcMock;
 
         public CalculoIMCHandlerTest()
         {
             _validatorMock = new Mock<IValidator<CalculoIMCRequest>>();
-            _handler = new CalculoIMCHandler(_validatorMock.Object);
+            _servicoCalculoImcMock = new Mock<IServicoCalculoIMC>();
+            _handler = new CalculoIMCHandler(_validatorMock.Object, _servicoCalculoImcMock.Object);
         }
 
         [Fact]
@@ -28,6 +31,8 @@ namespace TesteIMCTestes.Unitario.Application.Commands.CalculoIMC
         {
             _validatorMock.Setup(x => x.ValidateAsync(It.IsAny<CalculoIMCRequest>(), CancellationToken.None))
                 .Returns(() => Task.FromResult(new ValidationResult()));
+
+            _servicoCalculoImcMock.Setup(x => x.CalcularIMC(2, 100)).Returns(new CalculoIMCResultado(25, "Teste"));
 
             var request = new CalculoIMCRequest
             {
@@ -39,6 +44,7 @@ namespace TesteIMCTestes.Unitario.Application.Commands.CalculoIMC
 
             response.IsSuccess.Should().BeTrue();
             response.IMC.Should().Be(25);
+            response.Analise.Should().Be("Teste");
         }
 
         [Fact]

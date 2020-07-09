@@ -20,6 +20,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\TesteIMCApplication\TesteIMCApplication.csproj" />
+    <ProjectReference Include="..\TesteIMCDominio\TesteIMCDominio.csproj" />
     <ProjectReference Include="..\TesteIMCWebAPI\TesteIMCWebAPI.csproj" />
   </ItemGroup>
 
