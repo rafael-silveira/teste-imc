@@ -19,7 +19,7 @@ namespace TesteIMCTestes.Unitario.Dominio.Servicos
         [InlineData(2, 100, 25, "Sobrepeso")]
         [InlineData(2, 120, 30, "Obesidade")]
         [InlineData(2, 160, 40, "Obesidade grave")]
-        public void Testar1(decimal altura, decimal peso, decimal imcEsperado, string analiseEsperada) 
+        public void CalcularIMC_ValoresValidosInformados_IMCCalculado(decimal altura, decimal peso, decimal imcEsperado, string analiseEsperada) 
         {
             var resultado = _servicoCalculoImc.CalcularIMC(altura, peso);
 

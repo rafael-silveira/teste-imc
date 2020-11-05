@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Net;
-using System.Text;
-
-namespace TesteIMCDominio.Servicos.CalculoIMC
+﻿namespace TesteIMCDominio.Servicos.CalculoIMC
 {
     public class ServicoCalculoIMC : IServicoCalculoIMC
     {

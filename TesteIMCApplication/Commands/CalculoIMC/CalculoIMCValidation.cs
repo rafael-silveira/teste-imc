@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Text.RegularExpressions;
-using FluentValidation;
+﻿using FluentValidation;
 
 namespace TesteIMCApplication.Commands.CalculoIMC
 {

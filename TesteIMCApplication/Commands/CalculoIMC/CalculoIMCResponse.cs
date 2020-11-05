@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using TesteIMCApplication.Base;
+﻿using TesteIMCApplication.Base;
 
 namespace TesteIMCApplication.Commands.CalculoIMC
 {
