@@ -5,8 +5,9 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="FluentValidation" Version="9.0.0" />
-    <PackageReference Include="MediatR" Version="8.0.2" />
+    <PackageReference Include="FluentValidation" Version="10.3.0" />
+    <PackageReference Include="MediatR" Version="9.0.0" />
+    <PackageReference Include="Microsoft.CodeCoverage" Version="16.10.0" />
   </ItemGroup>
 
   <ItemGroup>
