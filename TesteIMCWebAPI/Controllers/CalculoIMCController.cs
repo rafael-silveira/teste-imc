@@ -12,7 +12,7 @@ namespace TesteIMCWebAPI.Controllers
     [ApiController]
     public class CalculoIMCController : ControllerBase
     {
-        private IMediator _mediator;
+        private readonly IMediator _mediator;
 
         public CalculoIMCController(IMediator mediator)
         {

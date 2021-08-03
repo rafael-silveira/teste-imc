@@ -25,7 +25,7 @@ namespace TesteIMCTestes.Unitario.Application.Commands.CalculoIMC
         }
 
         [Fact]
-        public async void Handle_ValidacaoOk_Sucesso()
+        public async Task Handle_ValidacaoOk_Sucesso()
         {
             _validatorMock.Setup(x => x.ValidateAsync(It.IsAny<CalculoIMCRequest>(), CancellationToken.None))
                 .Returns(() => Task.FromResult(new ValidationResult()));
@@ -46,7 +46,7 @@ namespace TesteIMCTestes.Unitario.Application.Commands.CalculoIMC
         }
 
         [Fact]
-        public async void Handle_ValidacaoFalha_Falha()
+        public async Task Handle_ValidacaoFalha_Falha()
         {
             _validatorMock.Setup(x => x.ValidateAsync(It.IsAny<CalculoIMCRequest>(), CancellationToken.None))
                 .Returns(() => Task.FromResult(new ValidationResult(new List<ValidationFailure>()

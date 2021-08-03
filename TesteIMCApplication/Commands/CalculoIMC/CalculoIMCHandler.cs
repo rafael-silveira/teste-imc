@@ -11,8 +11,8 @@ namespace TesteIMCApplication.Commands.CalculoIMC
 {
     public class CalculoIMCHandler : IRequestHandler<CalculoIMCRequest, CalculoIMCResponse>
     {
-        private IValidator<CalculoIMCRequest> _validator;
-        private IServicoCalculoIMC _servicoCalculoImc;
+        private readonly IValidator<CalculoIMCRequest> _validator;
+        private readonly IServicoCalculoIMC _servicoCalculoImc;
 
         public CalculoIMCHandler(IValidator<CalculoIMCRequest> validator, IServicoCalculoIMC servicoCalculoImc)
         {

@@ -4,7 +4,7 @@ namespace TesteIMCApplication.Base
 {
     public abstract class BaseResponse
     {
-        public BaseResponse()
+        protected BaseResponse()
         {
             IsSuccess = true;
             Errors = new List<string>();

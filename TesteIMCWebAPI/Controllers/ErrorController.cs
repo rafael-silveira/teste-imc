@@ -13,10 +13,6 @@ namespace TesteIMCWebAPI.Controllers
             var context = HttpContext.Features.Get<IExceptionHandlerFeature>();
 
             return BadRequest(context.Error.Message);
-
-            //return Problem(
-              //  detail: "DETAIL???",
-                //title: "titulo?");
         }
     }
 }
